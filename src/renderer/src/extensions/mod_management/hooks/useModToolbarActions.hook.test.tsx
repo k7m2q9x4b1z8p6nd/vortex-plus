@@ -124,7 +124,7 @@ describe("useModToolbarActions", () => {
       options: {},
     } as unknown as IActionDefinition;
 
-    expect(labels([asComponent])).toHaveLength(4);
+    expect(labels([asComponent])).toHaveLength(6);
   });
 });
 

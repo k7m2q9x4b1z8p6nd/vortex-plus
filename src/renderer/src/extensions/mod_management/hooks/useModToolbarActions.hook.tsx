@@ -1,7 +1,7 @@
-import { mdiPlusCircleOutline, mdiPuzzleOutline } from "@mdi/js";
+import { mdiExport, mdiImport, mdiPlusCircleOutline, mdiPuzzleOutline } from "@mdi/js";
 import { getErrorCode, getErrorMessageOrDefault, unknownToError } from "@vortex/shared";
 import _ from "lodash";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { setConfirmPurge, setModAttribute } from "@/actions";
@@ -28,6 +28,7 @@ import NXMUrl from "../../nexus_integration/NXMUrl";
 import { selectModsToUpdate } from "../util/collection_update_warning/collectionUpdateWarning";
 import { NoDeployment } from "../util/exceptions";
 import metaLookupMatch from "../util/metaLookupMatch";
+import { exportModPack, importModPack } from "../util/modPack";
 import updateState from "../util/modUpdateState";
 import type { IModWithState } from "../views/CheckModVersionsButton";
 import { useActivator, useDeployMods, useNoMethodWarning } from "./useDeployMods.hook";
@@ -56,6 +57,8 @@ interface IPositionedAction {
  */
 const POSITION = {
   installFromFile: 25,
+  exportMods: 26,
+  importMods: 27,
   open: 30,
   checkVersions: 50,
   deploy: 105,
@@ -336,6 +339,64 @@ const useInstallFromFileAction = (t: TFunction): IPositionedAction => {
   );
 };
 
+/** Export Mods — writes the installed mods and their order to a backup file. */
+const useExportModsAction = (t: TFunction): IPositionedAction => {
+  const { api } = useMainContext();
+  const [busy, setBusy] = useState(false);
+
+  const run = useCallback(() => {
+    setBusy(true);
+    void exportModPack(api, t)
+      .catch(() => undefined)
+      .finally(() => setBusy(false));
+  }, [api, t]);
+
+  return useMemo(
+    () => ({
+      position: POSITION.exportMods,
+      action: {
+        id: "export-mods",
+        label: t("Export Mods"),
+        iconPath: mdiExport,
+        pinned: true,
+        isLoading: busy,
+        testId: "export-mods",
+        onClick: run,
+      },
+    }),
+    [busy, run, t],
+  );
+};
+
+/** Import Mods — restores mods, enabled state, and order from a backup or link file. */
+const useImportModsAction = (t: TFunction): IPositionedAction => {
+  const { api } = useMainContext();
+  const [busy, setBusy] = useState(false);
+
+  const run = useCallback(() => {
+    setBusy(true);
+    void importModPack(api, t)
+      .catch(() => undefined)
+      .finally(() => setBusy(false));
+  }, [api, t]);
+
+  return useMemo(
+    () => ({
+      position: POSITION.importMods,
+      action: {
+        id: "import-mods",
+        label: t("Import Mods"),
+        iconPath: mdiImport,
+        pinned: true,
+        isLoading: busy,
+        testId: "import-mods",
+        onClick: run,
+      },
+    }),
+    [busy, run, t],
+  );
+};
+
 /** Check for Updates — was `CheckModVersionsButton`. */
 const useCheckVersionsAction = (t: TFunction): IPositionedAction => {
   const { api } = useMainContext();
@@ -612,6 +673,8 @@ export const useModToolbarActions = (
   onActionClick?: IToolbarAnalytics["onActionClick"],
 ): IToolbarAction[] => {
   const installFromFile = useInstallFromFileAction(t);
+  const exportMods = useExportModsAction(t);
+  const importMods = useImportModsAction(t);
   const checkVersions = useCheckVersionsAction(t);
   const deploy = useDeployAction(t);
   const purge = usePurgeAction(t);
@@ -633,10 +696,30 @@ export const useModToolbarActions = (
 
   return useMemo(
     () =>
-      [installFromFile, checkVersions, deploy, purge, open, importFrom, ...ownRow]
+      [
+        installFromFile,
+        exportMods,
+        importMods,
+        checkVersions,
+        deploy,
+        purge,
+        open,
+        importFrom,
+        ...ownRow,
+      ]
         .filter((entry): entry is IPositionedAction => entry !== undefined)
         .sort((lhs, rhs) => lhs.position - rhs.position)
         .map((entry) => entry.action),
-    [checkVersions, deploy, importFrom, installFromFile, open, ownRow, purge],
+    [
+      checkVersions,
+      deploy,
+      exportMods,
+      importFrom,
+      importMods,
+      installFromFile,
+      open,
+      ownRow,
+      purge,
+    ],
   );
 };
