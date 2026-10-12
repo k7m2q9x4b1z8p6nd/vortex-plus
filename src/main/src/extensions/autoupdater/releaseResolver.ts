@@ -41,7 +41,7 @@ export class RateLimitError extends Error {
   }
 }
 
-const OWNER = "Nexus-Mods";
+const OWNER = "k7m2q9x4b1z8p6nd";
 const MAX_PAGES = 3;
 const INSTALLER_ASSET = /^vortex-setup-.*\.exe$/i;
 
@@ -62,7 +62,7 @@ export function repoForChannel(): string {
   if (override != null && override !== "") {
     return override.includes("/") ? override.split("/")[1]! : override;
   }
-  return "Vortex";
+  return "vortex-plus";
 }
 
 export function repoOwner(): string {

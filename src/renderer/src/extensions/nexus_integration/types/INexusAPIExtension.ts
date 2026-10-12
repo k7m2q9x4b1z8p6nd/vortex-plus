@@ -20,6 +20,7 @@ import type {
 } from "@nexusmods/nexus-api";
 
 import type { IMod } from "../../mod_management/types/IMod";
+import type { IModSearchOptions, IModSearchResult } from "./IModSearch";
 import type { IValidateKeyDataV2 } from "./IValidateKeyData";
 
 export interface INexusAPIExtension {
@@ -40,6 +41,7 @@ export interface INexusAPIExtension {
   nexusSearchCollections?: (
     options: ICollectionSearchOptions,
   ) => PromiseLike<ICollectionSearchResult>;
+  nexusSearchMods?: (options: IModSearchOptions) => PromiseLike<IModSearchResult>;
   nexusGetMyCollections?: (
     gameId: string,
     count?: number,

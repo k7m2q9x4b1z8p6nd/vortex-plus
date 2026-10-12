@@ -15,10 +15,23 @@
       "collections": "Collections",
       "mods": "Mods"
     },
-    "modsComingSoon": {
-      "title": "Mod browsing is coming soon",
-      "description": "You'll soon be able to browse mods directly in Vortex. Until then, visit Nexus Mods to discover and download mods.",
-      "openWebsite": "Open Nexus Mods Website"
+    "mods": {
+      "searchPlaceholder": "Search mods...",
+      "noMods": {
+        "title": "No mod results found for this game",
+        "message": "Try adjusting your search or browse on the Nexus Mods website."
+      },
+      "noFiles": "No downloadable files found for this mod",
+      "openWebsite": "Open Nexus Mods Website",
+      "export": "Export",
+      "exportTitle": "Export mod links",
+      "exportDone": "Exported {{count}} mod links",
+      "exportFailed": "Failed to export mod links",
+      "import": "Import & Download",
+      "importTitle": "Import mod links",
+      "importNoLinks": "No Nexus Mods links found in the file",
+      "importDone": "Queued {{queued}} mod downloads ({{failed}} failed)",
+      "importFailed": "Failed to import mod links"
     }
   },
   "pagination": {

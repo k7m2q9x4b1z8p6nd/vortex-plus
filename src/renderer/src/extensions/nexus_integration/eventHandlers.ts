@@ -59,6 +59,7 @@ import { ensureFreshMembership, refreshMembership } from "./membership";
 import { nxmModUrl } from "./NXMUrl";
 import { isRateLimited, notifyRateLimited } from "./rateLimit";
 import { isLoggedIn, isPremium } from "./selectors";
+import type { IModSearchOptions, IModSearchResult } from "./types/IModSearch";
 import type { IValidateKeyDataV2 } from "./types/IValidateKeyData";
 import {
   checkModVersionsImpl,
@@ -83,6 +84,7 @@ import {
   getModRequirementsInfo,
   MY_COLLECTIONS_SEARCH_QUERY,
 } from "./util/graphQueries";
+import { searchMods } from "./util/searchMods";
 import submitFeedback from "./util/submitFeedback";
 import type { SubmitCollectionOptions } from "./util_v3/submitCollectionV3";
 import { submitCollectionV3 } from "./util_v3/submitCollectionV3";
@@ -704,6 +706,12 @@ export function onSearchCollections(
   return (options) => {
     return Bluebird.resolve(nexus.searchCollectionsGraph(searchQuery, options));
   };
+}
+
+export function onSearchMods(
+  api: IExtensionApi,
+): (options: IModSearchOptions) => Promise<IModSearchResult> {
+  return (options) => searchMods(api, options);
 }
 
 export function onResolveCollectionUrl(

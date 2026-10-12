@@ -13,12 +13,11 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "Nexus-Mods",
-        "repo": "Vortex",
+        "owner": "k7m2q9x4b1z8p6nd",
+        "repo": "vortex-plus",
         "private": false
       }
     ],
-    "publisherName": ["Black Tree Gaming Limited", "Black Tree Gaming Ltd"],
     "signingHashAlgorithms": ["sha256"],
     "rfc3161TimeStampServer": "http://timestamp.comodoca.com/rfc3161",
     "timeStampServer": "http://timestamp.comodoca.com"
